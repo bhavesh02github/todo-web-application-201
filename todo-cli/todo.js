@@ -32,7 +32,7 @@ const todoList = () => {
             const prefix = item.completed ? "[x]" : "[ ]"
             const date = item.dueDate === new Date().toISOString().split("T")[0] ? "" : `${item.dueDate}`
             return `${prefix} ${item.title} ${date}`
-        }).join("/n")
+        }).join("\n")
 
     }
   
