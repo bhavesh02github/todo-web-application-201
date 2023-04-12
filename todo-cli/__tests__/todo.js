@@ -1,4 +1,4 @@
-const todoList = require('../todo');
+let todoList = require('../todo');
 
 const {all, markAsComplete, add, overdue, dueToday, dueLater } = todoList();
 
@@ -11,18 +11,18 @@ describe("TodoList Test Suite", () => {
             {
                 title: "Buy curd",
                 completed: false,
-                dueDate: new Date(today.getTime() - 2 * oneday).toLocaleDateString("en-CA"),
+                dueDate: new Date(today.getTime() - 2 * oneday).toISOString().slice(0,10),
 
             },
             {
-                title: "Pay rent",
+                title: "Pay exam fee",
                 completed: false,
-                dueDate: new Date().toLocaleDateString("en-CA"),
+                dueDate: new Date().toISOString().slice(0,10),
             },
             {
                 title: "Submit Assignment",
                 completed: false,
-                dueDate: new Date(today.getTime() + 2 * oneday).toLocaleDateString("en-CA"),
+                dueDate: new Date(today.getTime() + 2 * oneday).toISOString().slice(0,10),,
             },
         ].forEach(add);
     });
@@ -32,7 +32,7 @@ describe("TodoList Test Suite", () => {
             {
                 title: "Test todo item",
                 completed: false,
-                dueDate: new Date().toLocaleDateString("en-CA"),
+                dueDate: new Date().toISOString().slice(0,10),
             }
         );
 
