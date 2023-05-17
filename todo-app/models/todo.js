@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       if (!duedate) {
         throw new Error("Due date is required.");
       }
-      return this.create({ title: title, duedate: dueDate, completed: false });
+      return this.create({ title: title, duedate: duedate, completed: false });
     }
     static getTodos() {
       return this.findAll();
