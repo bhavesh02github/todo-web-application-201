@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-    static addTodo({ title, dueDate }) {
+    static addTodo({ title, duedate }) {
       if (!title) {
         throw new Error("Title is required.");
       }
