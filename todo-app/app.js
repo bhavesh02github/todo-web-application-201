@@ -54,10 +54,11 @@ app.get("/todos", async (request, response) => {
 app.post("/todos", async (request, response) => {
   console.log("creating a todo", request.body);
   try {
-    await Todo.addTodo({
-      title: request.body.title,
-      duedate: request.body.duedate,
-    });
+    await Todo.addTodo(
+//       title: request.body.title,
+//       duedate: request.body.duedate,
+      request.body
+    );
     return response.redirect("/");
   } catch (error) {
     console.log(error);
