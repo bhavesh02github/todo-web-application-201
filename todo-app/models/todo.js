@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       if (!duedate) {
         throw new Error("Due date is required.");
       }
-      return this.create({ title: title, dueDate: dueDate, completed: false });
+      return this.create({ title: title, duedate: duedate, completed: false });
     }
     setCompletionStatus(completed) {
       let r = completed;
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       let date = new Date().toISOString().split("T")[0];
       return this.findAll({
         where: {
-          dueDate: {
+          duedate: {
             [Op.lt]: date,
           },
           completed: {
