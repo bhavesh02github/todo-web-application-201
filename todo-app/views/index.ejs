@@ -3,9 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<%= csrfToken %>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="./css/styles.css" rel="stylesheet">
     <script>
@@ -18,7 +18,7 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     _csrf: token,
-                    completed: completed
+                    completed: !completed
                 })
             })
                 .then((res) => {
@@ -44,7 +44,7 @@
                 .catch((err) => console.error(err));
         }
     </script>
-    <title>Todo-Manager</title>
+    <title>Todo-List</title>
 </head>
 
 <body>
@@ -60,7 +60,7 @@
                         </div>
                         <div class="flex-auto">
                             <input class="border border-gray-300 text-gray-900 w-full rounded p-2 text-sm leading-4"
-                                type="date" name="duedate" required>
+                                type="date" name="dueDate" required>
                         </div>
                         <div class="flex-none">
                             <button class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2"
@@ -68,19 +68,17 @@
                         </div>
                     </div>
                 </form>
-                <div>
-                    <%- include('todos.ejs',{ "todotype" : "Overdue" , "id" : "count-overdue" , "todos" : overdueTodos
-                        }) %>
 
-                        <%- include('todos.ejs',{ "todotype" : "Due Today" , "id" : "count-due-today" , "todos" :
-                            dueTodayTodos }) %>
+                <%- include('todos.ejs',{ "todotype" : "Overdue" , "id" : "count-overdue" , "todos" : overdueTodos }) %>
 
-                            <%- include('todos.ejs',{ "todotype" : "Due Later" , "id" : "count-due-later" , "todos" :
-                                dueLaterTodos }) %>
+                    <%- include('todos.ejs',{ "todotype" : "Due Today" , "id" : "count-due-today" , "todos" :
+                        dueTodayTodos }) %>
 
-                                <%- include('todos.ejs',{ "todotype" : "Completed Items" , "id"
-                                    : "count-completed-items" , "todos" : completedTodos }) %>
-                </div>
+                        <%- include('todos.ejs',{ "todotype" : "Due Later" , "id" : "count-due-later" , "todos" :
+                            dueLaterTodos }) %>
+
+                            <%- include('todos.ejs',{ "todotype" : "Completed Items" , "id" : "count-completed-items"
+                                , "todos" : CompletedTodos }) %>
         </div>
     </div>
 </body>
