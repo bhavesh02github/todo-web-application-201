@@ -3,6 +3,6 @@ body {
     font-family: 'Times New Roman', Times, serif;   
 }
 
-.TodoItem:hover .trash-icon {
+.Todo-Item:hover .trash-icon {
     display: block;
 }
