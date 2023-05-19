@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 "use strict";
 const { Model, Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
@@ -10,45 +12,52 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-    static addTodo({ title, duedate }) {
+    static addTodo({ title, dueDate }) {
       if (!title) {
         throw new Error("Title is required.");
       }
       if (!duedate) {
         throw new Error("Due date is required.");
       }
-      return this.create({ title: title, duedate: duedate, completed: false });
+      return this.create({ title: title, dueDate: dueDate, completed: false });
+    }
+    setCompletionStatus(completed) {
+      let r = completed;
+      return this.update({ completed: r });
     }
     static getTodos() {
       return this.findAll();
     }
-    static getoverdueTodos() {
+
+    static async getCompleted() {
       return this.findAll({
         where: {
-          completed: false,
-          duedate: {
-            [Op.lt]: new Date().toISOString().split("T")[0],
+          completed: true,
+        },
+      });
+    }
+
+    static getoverdueTodos() {
+      let date = new Date().toISOString().split("T")[0];
+      return this.findAll({
+        where: {
+          dueDate: {
+            [Op.lt]: date,
+          },
+          completed: {
+            [Op.eq]: false,
           },
         },
       });
     }
     static getdueTodayTodos() {
+      let date = new Date().toISOString().split("T")[0];
       return this.findAll({
         where: {
-          completed: false,
           duedate: {
-            [Op.eq]: new Date().toISOString().split("T")[0],
+            [Op.eq]: date,
           },
-        },
-      });
-    }
-    static async getdueLaterTodos() {
-      return this.findAll({
-        where: {
           completed: false,
-          duedate: {
-            [Op.gt]: new Date().toISOString().split("T")[0],
-          }
         },
       });
     }
@@ -59,16 +68,16 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
-    static async getCompletedTodos() {
+    static getdueLaterTodos() {
+      let date = new Date().toISOString().split("T")[0];
       return this.findAll({
         where: {
-          completed: true,
+          duedate: {
+            [Op.gt]: date,
+          },
+          completed: false,
         },
-        order: [["id", "ASC"]],
       });
-    }
-    setCompletionStatus(completed) {
-      return this.update({ completed: !completed });
     }
   }
   Todo.init(
