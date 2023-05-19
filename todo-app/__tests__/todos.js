@@ -35,7 +35,7 @@ describe("Todo test suite", function () {
     const csrfToken = extractCsrfToken(res);
     const response = await agent.post("/todos").send({
       title: "Buy milk",
-      dueDate: new Date().toISOString(),
+      duedate: new Date().toISOString(),
       completed: false,
       _csrf: csrfToken
     });
@@ -48,7 +48,7 @@ describe("Todo test suite", function () {
     let csrfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
       title: "complete homework",
-      dueDate: new Date().toISOString(),
+      duedate: new Date().toISOString(),
       completed: false,
       _csrf: csrfToken,
     });
@@ -81,7 +81,7 @@ describe("Todo test suite", function () {
     let csrfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
       title: "Buy milk",
-      dueDate: new Date().toISOString(),
+      duedate: new Date().toISOString(),
       completed: true,
       _csrf: csrfToken,
     });
@@ -113,7 +113,7 @@ describe("Todo test suite", function () {
     let csrfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
       title: "Buy milk",
-      dueDate: new Date().toISOString(),
+      duedate: new Date().toISOString(),
       completed: false,
       _csrf: csrfToken,
     });
