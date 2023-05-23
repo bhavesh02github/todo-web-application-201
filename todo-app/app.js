@@ -5,6 +5,8 @@ const bodypaser = require("body-parser");
 var cookieParser = require("cookie-parser");
 
 const path = require("path");
+app.set("views", path.join(__dirname, "views"));
+
 const passport = require('passport'); //9.4k (gzipped: 2.9k)
 const connectEnsureLogin = require('connect-ensure-login'); //811 (gzipped: 368)
 const session = require('express-session'); //21.3k (gzipped: 7.2k)
@@ -12,11 +14,14 @@ const LocalStrategy = require('passport-local'); //1.5k (gzipped: 719)
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+
+const flash = require("connect-flash");
+
 app.use(bodypaser.json());
 app.use(express.urlencoded({ extented: false }));
 app.use(cookieParser("shh! secret string"));
 app.use(csrf("123456789iamasecret987654321look", ["POST", "PUT", "DELETE"]));
-
+app.use(flash({}));
 
 
 app.use(session({
@@ -29,23 +34,31 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(function(request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
+
+// app.use(flash());
+// res.render(req.flash(type, message));
+
 passport.use(new LocalStrategy({
   usernameField: 'email',
-  passwordField: 'password'
+  passwordField: 'password',
 }, (username, password, done) => {
   User.findOne({ where: { email: username }})
-   .then(async(user) => {
-    const result = await bcrypt.compare(password, user.password)
+   .then(async function (user) {
+    const result = await bcrypt.compare(password, user.password);
     if (result) {
       return done(null, user);
     }
     else {
-      return done("Invalid Password");
+      return done(null, false, { message: "Invalid Password" });
     }
-
-   }).catch((error) => {
-      return (error);
    })
+   .catch((error) => {
+     return done(null, false, { message: "Invalid E-mail" });
+   });
 }));
 
 passport.serializeUser((user, done) => {
@@ -56,10 +69,10 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
   User.findByPk(id)
     .then(user => {
-      done(null, user)
+      done(null, user);
     })
     .catch(error => {
-      done(error, null)
+      done(error, null);
     })
 });
 
@@ -70,6 +83,7 @@ module.exports = {
 
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
+
 
 const { Todo, User } = require("./models");
 
@@ -153,8 +167,22 @@ app.get("/signout",(request,response, next)=>{
   request.logout((err)=>{ 
     if (err){ return next(err);}
     response.redirect("/");
-  })
-})
+  });
+});
+
+app.post(
+  "/session",
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
+  function (request, response) {
+    console.log(request.user);
+    response.redirect("/todos");
+  }
+);
+
+
 
 // app.get("/todos", async (request, response) => {
 //   console.log("Todo items", response.body);
