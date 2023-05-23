@@ -37,14 +37,11 @@
 
                 <%- include('todo.ejs',{ "todotype" : "Overdue" , "id" : "count-overdue" , "todos" : overdueTodos }) %>
 
-                    <%- include('todo.ejs',{ "todotype" : "Due Today" , "id" : "count-due-today" , "todos" :
-                        dueTodayTodos }) %>
+                <%- include('todo.ejs',{ "todotype" : "Due Today" , "id" : "count-due-today" , "todos" : dueTodayTodos }) %>
 
-                        <%- include('todo.ejs',{ "todotype" : "Due Later" , "id" : "count-due-later" , "todos" :
-                            dueLaterTodos }) %>
+                <%- include('todo.ejs',{ "todotype" : "Due Later" , "id" : "count-due-later" , "todos" : dueLaterTodos }) %>
 
-                            <%- include('todo.ejs',{ "todotype" : "Completed Items" , "id" : "count-completed-items"
-                                , "todos" : CompletedTodos }) %>
+                <%- include('todo.ejs',{ "todotype" : "Completed Items" , "id" : "count-completed-items", "todos" : CompletedTodos }) %>
         </div>
     </div>
 </body>
