@@ -10,16 +10,19 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      Todo.belongsTo(models.User, {
+        foreignKey: 'userId'
+      })
       // define association here
     }
-    static addTodo({ title, duedate }) {
+    static addTodo({ title, duedate, userId }) {
       if (!title) {
         throw new Error("Title is required.");
       }
       if (!duedate) {
         throw new Error("Due date is required.");
       }
-      return this.create({ title: title, duedate: duedate, completed: false });
+      return this.create({ title: title, duedate: duedate, completed: false, userId });
     }
     setCompletionStatus(completed) {
       let r = completed;
@@ -29,34 +32,37 @@ module.exports = (sequelize, DataTypes) => {
       return this.findAll();
     }
 
-    static async getCompleted() {
+    static async getCompleted(userId) {
       return this.findAll({
         where: {
           completed: true,
+          userId
         },
       });
     }
 
-    static getoverdueTodos() {
+    static getoverdueTodos(userId) {
       let date = new Date().toISOString().split("T")[0];
       return this.findAll({
         where: {
           duedate: {
             [Op.lt]: date,
           },
+          userId,
           completed: {
             [Op.eq]: false,
           },
         },
       });
     }
-    static getdueTodayTodos() {
+    static getdueTodayTodos(userId) {
       let date = new Date().toISOString().split("T")[0];
       return this.findAll({
         where: {
           duedate: {
             [Op.eq]: date,
           },
+          userId,
           completed: false,
         },
       });
@@ -65,16 +71,18 @@ module.exports = (sequelize, DataTypes) => {
       return this.destroy({
         where: {
           id,
+          userId
         },
       });
     }
-    static getdueLaterTodos() {
+    static getdueLaterTodos(userId) {
       let date = new Date().toISOString().split("T")[0];
       return this.findAll({
         where: {
           duedate: {
             [Op.gt]: date,
           },
+          userId,
           completed: false,
         },
       });
