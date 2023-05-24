@@ -187,17 +187,6 @@ app.get("/signout",(request,response, next) => {
 });
 
 
-//  app.get("/todo", async funtction (request, response) {
-//    console.log("Processing all the Todo items");
-//    try {
-//      const Todo = await Todo.findAll();
-//      return response.send(todos);
-//    } catch (error) {
-//      console.log(error);
-//      return response.status(422).json(error);
-//     }
-//  });
-
 app.post("/todos", connectEnsureLogin.ensureLoggedIn(), async (request, response) => {
   console.log("creating a todo", request.body);
   console.log(request.user);
@@ -235,17 +224,6 @@ app.put("/todos/:id", connectEnsureLogin.ensureLoggedIn(), async (request, respo
     return response.status(422).json(error);
   }
 });
-// eslint-disable-line no-unused-vars
-// app.delete("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async (request, response) => {
-//   console.log("Delete a todo by ID: ", request.params.id);
-//   try {
-//     await Todo.remove(request.params.id);
-//     return response.json({ success: true });
-//   }
-//   catch (error) {
-//     return response.status(422).json(error);
-//   }
-// });
 
 app.delete("/todos/:id", connectEnsureLogin.ensureLoggedIn(), async (request, response) => {
   console.log("Delete a todo by ID: ", request.params.id);
