@@ -2,8 +2,9 @@
 /* eslint-disable no-undef */
 const request = require("supertest");
 var cheerio = require("cheerio");
-
+const { QueryTypes} = require("sequelize");
 const db = require("../models/index");
+const express = require("express");
 const app = require("../app");
 const passport = require("passport");
 
@@ -27,7 +28,7 @@ const login = async (agent, username, password) => {
 describe("Todo test suite", function () {
   beforeAll(async () => {
     await db.sequelize.sync({ force: true });
-    server = app.listen(4000, () => { });
+    server = app.listen(4000, () => {});
     agent = request.agent(server);
   });
 
@@ -82,7 +83,7 @@ describe("Todo test suite", function () {
     let res = await agent.get("/todos");
     let csrfToken = extractCsrfToken(res);
     await agent.post("/todos").send({
-      title: "complete homework",
+      title: "Buy milk",
       duedate: new Date().toISOString(),
       completed: false,
       _csrf: csrfToken,
@@ -95,11 +96,12 @@ describe("Todo test suite", function () {
     const dueTodayCount = parsedGroupedResponse.dueTodayTodos.length;
     const latestTodo = parsedGroupedResponse.dueTodayTodos[dueTodayCount - 1];
 
+    const todoId = latestTodo.id;
     res = await agent.get("/todos");
     csrfToken = extractCsrfToken(res);
-
+   
     const markCompletedResponse = await agent
-      .put(`/todos/${latestTodo.id}`)
+      .put(`/todos/${todoId}`)
       .send({
         _csrf: csrfToken,
         completed: true,
@@ -131,7 +133,7 @@ describe("Todo test suite", function () {
     res = await agent.get("/todos");
     csrfToken = extractCsrfToken(res);
 
-    console.log(latestTodo.completed);
+    //console.log(latestTodo.completed);
     const markIncompleteResponse = await agent
       .put(`/todos/${latestTodo.id}`)
       .send({
@@ -163,10 +165,8 @@ describe("Todo test suite", function () {
     res = await agent.get("/todos");
     csrfToken = extractCsrfToken(res);
 
-    const deleteTodo = await agent.delete(`/todos/${latestTodo}`);
+    const deleteTodo = await agent.delete(`/todos/${latestTodo.id}`);
 
-    expect(deleteTodo.statusCode).toBe(500);
-    const status = Boolean(deleteTodo.text);
-    expect(status).toBe(true);
+    expect(deleteTodo.statusCode).toBe(200);
   });
 });
