@@ -16,12 +16,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
     static addTodo({ title, duedate, userId }) {
-      if (!title) {
-        throw new Error("Title is required.");
-      }
-      if (!duedate) {
-        throw new Error("Due date is required.");
-      }
       return this.create({ title: title, duedate: duedate, completed: false, userId });
     }
     setCompletionStatus(completed) {
@@ -38,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
           completed: true,
           userId
         },
+        order: [["id", "ASC"]],
       });
     }
 
@@ -53,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
             [Op.eq]: false,
           },
         },
+        order: [["id", "ASC"]],
       });
     }
     static getdueTodayTodos(userId) {
@@ -65,9 +61,10 @@ module.exports = (sequelize, DataTypes) => {
           userId,
           completed: false,
         },
+        order: [["id", "ASC"]],
       });
     }
-    static async remove(id) {
+    static async remove(id,userId) {
       return this.destroy({
         where: {
           id,
@@ -85,30 +82,15 @@ module.exports = (sequelize, DataTypes) => {
           userId,
           completed: false,
         },
+        order: [["id", "ASC"]],
       });
     }
   }
   Todo.init(
     {
-      title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: true,
-          len: 5,
-        },
-      },
-      duedate: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
-        validate: {
-          notNull: true,
-        },
-      },
-      completed: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
+      title:  DataTypes.STRING,
+      duedate: DataTypes.DATEONLY,
+      completed: DataTypes.BOOLEAN,
     },
     {
       sequelize,
