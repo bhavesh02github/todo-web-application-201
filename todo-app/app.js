@@ -205,7 +205,7 @@ app.post("/todos", connectEnsureLogin.ensureLoggedIn(), async (request, response
     request.flash("error", "ADD TITLE TO YOUR TODO!");
     return response.redirect("/todos");
   }
-  if (!request.body.duedate) {
+  if (!request.body.dueDate) {
     request.flash("error", "TODO ITEM MUST CONTAIN DATE!");
     return response.redirect("/todos");
   }
