@@ -4,8 +4,8 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.addColumn('Todos', 'userId', {
-    type: Sequelize.DataTypes.INTEGER
-    })
+    type: Sequelize.DataTypes.INTEGER,
+    });
 
     await queryInterface.addConstraint('Todos', {
       fields: ['userId'],
@@ -14,12 +14,11 @@ module.exports = {
       table: 'Users',
       field: 'id'
       }
-    })
-    // await queryInterface.createTable('users', { id: Sequelize.INTEGER });
+    });
      
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn('Todos', 'userId')
-  }
+    await queryInterface.removeColumn('Todos', 'userId');
+  },
 };
