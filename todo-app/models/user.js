@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.hasMany(models.Todo, {
-        foreignKey: 'userId'
-      })
+        foreignKey: 'userId',
+      });
       // define association here
     }
   }
@@ -20,8 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
     email: DataTypes.STRING,
-    password: DataTypes.STRING
-  }, {
+    password: DataTypes.STRING,
+  }, 
+  {
     sequelize,
     modelName: 'User',
   });
