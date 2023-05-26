@@ -106,6 +106,7 @@ app.get("/todos", connectEnsureLogin.ensureLoggedIn(), async (request, response)
 
   if (request.accepts("html")) {
     response.render("todos", {
+      loggedInUser: request.user,
       allTodos,
       overdueTodos,
       dueTodayTodos,
@@ -133,7 +134,6 @@ app.post("/users", async (request, response) => {
   // Hash password using bcrypt
   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
   console.log(hashedPwd);
-  //console.log("Firstname", request.body.firstName);
   if (request.body.firstName.length == 0) {
     request.flash("error", "First name can't be empty!");
     return response.redirect("/signup");
@@ -185,7 +185,6 @@ app.get("/signout",(request,response, next) => {
     response.redirect("/");
   })
 });
-
 
 app.post("/todos", connectEnsureLogin.ensureLoggedIn(), async (request, response) => {
   console.log("creating a todo", request.body);
