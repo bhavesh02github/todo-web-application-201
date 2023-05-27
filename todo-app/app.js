@@ -197,6 +197,10 @@ app.post("/todos", connectEnsureLogin.ensureLoggedIn(), async (request, response
     request.flash("error", "TODO ITEM MUST CONTAIN DATE!");
     return response.redirect("/todos");
   }
+  if (request.body.title.length < 5) {
+    request.flash("error", "TODO ITEM LENGTH IS LESS THAN 5!");
+    return response.redirect("/todos");
+  }
   try {
     await Todo.addTodo({
       title: request.body.title,
