@@ -172,4 +172,90 @@ describe("Todo test suite", function () {
 
     expect(deleteTodo.statusCode).toBe(200);
   });
+
+  test("User A cannot update User B Todos", async () => {
+    let res = await agent.get("/signup");
+    let csrfToken = extractCsrfToken(res);
+    res = await agent.post("/users").send({
+      firstName: "user1",
+      lastName: "a",
+      email: "xyz@gmail.com",
+      password: "789456",
+      _csrf: csrfToken,
+    });
+
+    res = await agent.get("/todos");
+    csrfToken = extractCsrfToken(res);
+    res = await agent.post("/todos").send({
+      title: "Test todo",
+      dueDate: new Date().toISOString(),
+      completed: false,
+      _csrf: csrfToken,
+    });
+    const userA = res.id;
+
+    await agent.get("/signout");
+
+    res = await agent.get("/signup");
+    csrfToken = extractCsrfToken(res);
+    res = await agent.post("/users").send({
+      firstName: "User2",
+      lastName: "b",
+      email: "pqr@gmail.com",
+      password: "123456",
+      _csrf: csrfToken,
+    });
+
+    res = await agent.get("/todos");
+    csrfToken = extractCsrfToken(res);
+    const parsedResponse = await agent.put(`/todos/${userA}`).send({
+      _csrf: csrfToken,
+      completed: true,
+    });
+    console.log(parsedResponse);
+    expect(parsedResponse.statusCode).toBe(422);
+  });
+
+   test("User A cannot delete User B Todos", async () => {
+    let res = await agent.get("/signup");
+    let csrfToken = extractCsrfToken(res);
+    res = await agent.post("/users").send({
+      firstName: "usera",
+      lastName: "usera",
+      email: "usera@gmail.com",
+      password: "usera",
+      _csrf: csrfToken,
+    });
+
+    res = await agent.get("/todos");
+    csrfToken = extractCsrfToken(res);
+    res = await agent.post("/todos").send({
+      title: "Test todo",
+      dueDate: new Date().toISOString(),
+      completed: false,
+      _csrf: csrfToken,
+    });
+    const userA = res.id;
+
+    await agent.get("/signout");
+
+    res = await agent.get("/signup");
+    csrfToken = extractCsrfToken(res);
+    res = await agent.post("/users").send({
+      firstName: "userb",
+      lastName: "userb",
+      email: "userb@gmail.com",
+      password: "userb",
+      _csrf: csrfToken,
+    });
+
+    res = await agent.get("/todos");
+    csrfToken = extractCsrfToken(res);
+    const parsedResponse = await agent.delete(`/todos/${userA}`).send({
+      _csrf: csrfToken,
+    });
+    expect(parsedResponse.statusCode).toBe(422);
+  });
 });
+
+
