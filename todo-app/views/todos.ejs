@@ -54,11 +54,6 @@
             <div>
                 <%= "Hey! " + loggedInUser.firstName + " " + loggedInUser.lastName %>
             </div>
-            <div class="gap-2 text-blue-600">
-                <a href="/" style="color: blue;">Homepage |</a>
-                <a href="/signup" style="color: blue;">Sign Up |</a>
-                <a href="/login" style="color: blue;">Login</a>
-            </div>
             <a href="/signout" style="color: green;">Signout</a>
                 <form action="/todos" method="post">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
