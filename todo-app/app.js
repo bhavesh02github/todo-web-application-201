@@ -52,11 +52,11 @@ passport.use(new LocalStrategy({
        return done(null, user);
      }
      else {
-       return done(null, false, { message: "Invalid Password" });
+       return done(null, false, { message: "Invalid User Credentials" });
      }
    })
    .catch((error) => {
-     return done(null, false, { message: "Invalid e-mail" });
+     return done(null, false, { message: "Invalid User Credentials" });
    });
 }));
 
@@ -201,7 +201,8 @@ app.post("/todos", connectEnsureLogin.ensureLoggedIn(), async (request, response
     await Todo.addTodo({
       title: request.body.title,
       duedate: request.body.dueDate,
-      userId: request.user.id
+      completed: request.body.completed,
+      userId: request.user.id,
     });
     return response.redirect("/todos");
   } catch (error) {
@@ -212,7 +213,6 @@ app.post("/todos", connectEnsureLogin.ensureLoggedIn(), async (request, response
 
 app.put("/todos/:id", connectEnsureLogin.ensureLoggedIn(), async (request, response) => {
   console.log("we have to update a todo with ID:", request.params.id);
-  //const todo = await Todo.findByPk(request.params.id);
   try {
     const todo = await Todo.findByPk(request.params.id);
     const updatedTodo = await todo.setCompletionStatus(request.body.completed);
@@ -223,6 +223,7 @@ app.put("/todos/:id", connectEnsureLogin.ensureLoggedIn(), async (request, respo
     return response.status(422).json(error);
   }
 });
+
 
 app.delete("/todos/:id", connectEnsureLogin.ensureLoggedIn(), async (request, response) => {
   console.log("Delete a todo by ID: ", request.params.id);
